@@ -1,36 +1,53 @@
 # Aqui se encuentra la base de datos utilizada en este proyecto:
-CREATE TABLE roles (
-	id SERIAL NOT NULL PRIMARY KEY, 
-	descripcion TEXT NOT NULL
-);
- 
-CREATE TABLE usuarios (
-	id SERIAL NOT NULL PRIMARY KEY,
-	name VARCHAR(255) NOT NULL,
-	email VARCHAR(255) NOT NULL,
-	password TEXT NOT NULL,
-	rol_id INT NOT NULL,
-	CONSTRAINT fk_usu_rol FOREIGN KEY(rol_id) REFERENCES roles(id)
-);
-CREATE TABLE reportes (
-	id SERIAL NOT NULL PRIMARY KEY,
-	nombre VARCHAR(255) NOT NULL,
-	descripcion TEXT,
-	fecha DATE NOT NULL,
-	urgencia BOOL DEFAULT false,
-	vigencia INT DEFAULT 0,
-	tipo_reporte INT DEFAULT 0,
-	lugar INT DEFAULT 0,
-	user_id INT NOT NULL,
-	CONSTRAINT fk_rep_usu FOREIGN KEY(user_id) REFERENCES usuarios(id)
-);
-CREATE TABLE anuncios (
-	id SERIAL NOT NULL PRIMARY KEY,
-	nombre VARCHAR(255) NOT NULL,
-	descripcion TEXT,
-	fecha DATE NOT NULL,
-	vigencia INT DEFAULT 0,
-	lugar INT DEFAULT 0,
-	user_id INT NOT NULL,
-	CONSTRAINT fk_anu_usu FOREIGN KEY(user_id) REFERENCES usuarios(id)
-);
+-- Roles
+CREATE TABLE IF NOT EXISTS roles (
+  id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  descripcion TEXT NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Usuarios
+CREATE TABLE IF NOT EXISTS usuarios (
+  id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password TEXT NOT NULL,
+  rol_id INT DEFAULT NULL,
+  permiso TINYINT(1) NOT NULL DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_usu_rol FOREIGN KEY (rol_id) REFERENCES roles(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Lugar (selector de aulas)
+CREATE TABLE IF NOT EXISTS lugar (
+  id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  aula VARCHAR(255) NOT NULL,
+  descripcion TEXT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Reportes
+CREATE TABLE IF NOT EXISTS reportes (
+  id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  nombre VARCHAR(255) NOT NULL,
+  descripcion TEXT,
+  fecha DATE NOT NULL,
+  urgencia TINYINT(1) NOT NULL DEFAULT 0,
+  vigencia INT NOT NULL DEFAULT 0,
+  tipo_reporte INT NOT NULL DEFAULT 0,
+  lugar_id INT DEFAULT NULL,
+  user_id INT NOT NULL,
+  CONSTRAINT fk_rep_usu FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT fk_rep_lugar FOREIGN KEY (lugar_id) REFERENCES lugar(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Anuncios
+CREATE TABLE IF NOT EXISTS anuncios (
+  id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  nombre VARCHAR(255) NOT NULL,
+  descripcion TEXT,
+  fecha DATE NOT NULL,
+  vigencia INT NOT NULL DEFAULT 0,
+  lugar_id INT DEFAULT NULL,
+  user_id INT NOT NULL,
+  CONSTRAINT fk_anu_usu FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT fk_anu_lugar FOREIGN KEY (lugar_id) REFERENCES lugar(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

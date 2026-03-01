@@ -2,6 +2,7 @@
   "name": "proyecto",
   "version": "1.0.0",
   "main": "index.js",
+"type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
@@ -12,9 +13,11 @@
   "description": "",
   "dependencies": {
     "body-parser": "^1.20.2",
+    "dotenv": "^17.3.1",
     "express": "^4.21.0",
     "express-session": "^1.18.0",
     "mysql": "^2.18.1",
+    "pg": "^8.19.0",
     "proyecto": "file:"
   },
   "devDependencies": {

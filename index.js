@@ -99,6 +99,8 @@ if (process.env.REDIS_URL) {
     console.log("🟡 REDIS_URL no definida. Usando MemoryStore.");
 }
 
+app.set('trust proxy', 1);
+
 app.use(session({
     store: sessionStore,
     secret: process.env.SESSION_SECRET || 'saul2905',

@@ -76,7 +76,7 @@ async function mostrarUsuarios() {
             };
             let labelrol;
             switch (l) {
-              case 0:
+              case 7:
                 labelrol = 'Guest';
                 break;
               case 1:

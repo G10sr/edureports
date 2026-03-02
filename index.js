@@ -172,7 +172,7 @@ app.post('/registrarUsuario', async (req,res)=>{
     }
 
     await query(
-        'INSERT INTO usuarios (name,email,password,rol_id,permiso) VALUES ($1,$2,$3,0,true)',
+        'INSERT INTO usuarios (name,email,password,rol_id,permiso) VALUES ($1,$2,$3,7,true)',
         [getname1,getuser1,getpassword1]
     );
 

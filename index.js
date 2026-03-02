@@ -4,6 +4,8 @@ import session from 'express-session';
 import { readFile } from 'fs/promises';
 import os from 'os';
 import pkg from 'pg';
+import RedisStore from 'connect-redis';
+import { createClient } from 'redis';
 
 const { Pool } = pkg;
 const app = express();
@@ -61,17 +63,31 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
+// ============================
+// SESIONES CON REDIS (producción)
+// ============================
+
+// Crear cliente Redis
+const redisClient = createClient({
+    url: process.env.REDIS_URL || 'redis://localhost:6379'
+});
+
+redisClient.connect().catch(console.error);
+
+// Middleware de sesión usando Redis
 app.use(session({
-    secret: 'saul2905',
+    store: new RedisStore({ client: redisClient }),
+    secret: process.env.SESSION_SECRET || 'saul2905', // usar variable de entorno en prod
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: false,
+        secure: false,       // cambiar a true si usas HTTPS
         httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24
+        maxAge: 1000 * 60 * 60 * 24 // 1 día
     }
 }));
 
+// Inicializar sesión si no existe
 app.use((req, res, next) => {
     if (!req.session.userlogged) {
         req.session.userlogged = 4;

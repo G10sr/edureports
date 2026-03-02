@@ -30,4 +30,4 @@ El sistema relaciona usuarios con reportes y anuncios, vinculándolos a aulas es
 
 ## 🗄 Base de Datos
 
-El esquema completo de la base de datos se encuentra en el archivo:
+El esquema completo de la base de datos se encuentra en el archivo: database.sql

@@ -4,8 +4,8 @@ import session from 'express-session';
 import { readFile } from 'fs/promises';
 import os from 'os';
 import pkg from 'pg';
-import RedisStore from 'connect-redis';
-import { createClient } from 'redis';
+import * as redis from 'redis';
+import * as connectRedis from 'connect-redis';
 
 const { Pool } = pkg;
 const app = express();
@@ -64,36 +64,52 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 // ============================
-// SESIONES CON REDIS (producción)
+// REDIS PARA SESIONES (PRODUCCIÓN)
 // ============================
 
-// Crear cliente Redis
-const redisClient = createClient({
-    url: process.env.REDIS_URL || 'redis://localhost:6379'
-});
+let sessionStore = undefined;
 
-redisClient.connect().catch(console.error);
+if (process.env.REDIS_URL) {
+    console.log("🔴 Intentando conectar a Redis...");
 
-// Middleware de sesión usando Redis
+    try {
+        const redisClient = redis.createClient({
+            url: process.env.REDIS_URL
+        });
+
+        redisClient.on("error", (err) =>
+            console.log("Redis Client Error", err)
+        );
+
+        await redisClient.connect();
+
+        console.log("✅ Conectado a Redis");
+
+        const { RedisStore } = await import("connect-redis");
+
+        sessionStore = new RedisStore({
+            client: redisClient,
+            prefix: "sess:"
+        });
+
+    } catch (err) {
+        console.log("⚠️ No se pudo conectar a Redis. Usando MemoryStore.");
+    }
+} else {
+    console.log("🟡 REDIS_URL no definida. Usando MemoryStore.");
+}
+
 app.use(session({
-    store: new RedisStore({ client: redisClient }),
-    secret: process.env.SESSION_SECRET || 'saul2905', // usar variable de entorno en prod
+    store: sessionStore,
+    secret: process.env.SESSION_SECRET || 'saul2905',
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: false,       // cambiar a true si usas HTTPS
+        secure: process.env.NODE_ENV === "production",
         httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 // 1 día
+        maxAge: 1000 * 60 * 60 * 24
     }
 }));
-
-// Inicializar sesión si no existe
-app.use((req, res, next) => {
-    if (!req.session.userlogged) {
-        req.session.userlogged = 4;
-    }
-    next();
-});
 
 // ============================
 // RUTAS HTML

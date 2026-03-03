@@ -63,7 +63,7 @@ async function mostrarUsuarios() {
 
         const checkboxContainer = document.createElement('div');
 
-        for (let l = 0; l <= 6; l++) {
+        for (let l = 1; l <= 7; l++) {
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.className = 'checkbox';

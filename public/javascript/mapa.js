@@ -143,157 +143,166 @@ async function verificarNuevosReportes() {
         currentHeight = Math.max(minHeight, currentHeight - 100);
         document.getElementById('ey40nT29W7O1').style.height = `${currentHeight}px`;
     }
+
+
+
     async function agregarIcono() {
-        const svg = document.getElementById('ey40nT29W7O1');
-        
-        let posicion = [];
-        let vigencia = [];
-        let posicion2 = [];
-        let vigencia2 = [];
-    
-        await fetch('/api/mapa')
-        .then(response => response.json())  
-        .then(data => {
-            posicion = data.map(item => item.posicion); 
-            vigencia = data.map(item => item.vigencia)
-        })
-        .catch(error => {
-            console.error('Error al obtener los reportes:', error);
-        });
-        await fetch('/api/mapa2')
-        .then(response => response.json())  
-        .then(data => {
-            posicion2 = data.map(item => item.posicion); 
-            vigencia2 = data.map(item => item.vigencia)
-        })
-        .catch(error => {
-            console.error('Error al obtener los reportes:', error);
-        });
-       
-        for (let i = 0; i < posicion.length; i++) {
-            if (vigencia[i] != 0){
+    const svg = document.getElementById('ey40nT29W7O1');
+
+    let posicion = [];
+    let vigencia = [];
+    let posicion2 = [];
+    let vigencia2 = [];
+
+    try {
+        const response1 = await fetch('/api/mapa');
+        const data1 = await response1.json();
+        posicion = data1.map(item => item.lugar_id);
+        vigencia = data1.map(item => item.vigencia);
+
+        const response2 = await fetch('/api/mapa2');
+        const data2 = await response2.json();
+        posicion2 = data2.map(item => item.lugar_id);
+        vigencia2 = data2.map(item => item.vigencia);
+
+    } catch (error) {
+        console.error('Error al obtener datos:', error);
+        return;
+    }
+
+    // ===== PRIMER MAPA =====
+    for (let i = 0; i < posicion.length; i++) {
+        if (vigencia[i] != false) {
+
             let imagen = document.createElementNS("http://www.w3.org/2000/svg", "image");
             imagen.setAttribute("href", "../imagenes/icon.svg");
-            imagen.setAttribute("width", "20"); // ancho
-            imagen.setAttribute("height", "20"); // alto
+            imagen.setAttribute("width", "20");
+            imagen.setAttribute("height", "20");
             imagen.style.boxShadow = "0 0 20px 5px rgba(255, 255, 0, 0.7)";
+
             if (posicion[i] == 1) {
-                imagen.setAttribute("x", "350");  // Bloque 1
-                imagen.setAttribute("y", "375");  // Bloque 1
+                imagen.setAttribute("x", "350");
+                imagen.setAttribute("y", "375");
             } else if (posicion[i] == 2) {
-                imagen.setAttribute("x", "368");  // Bloque 2
-                imagen.setAttribute("y", "385");  // Bloque 2
+                imagen.setAttribute("x", "368");
+                imagen.setAttribute("y", "385");
             } else if (posicion[i] == 3) {
-                imagen.setAttribute("x", "387");  // Bloque 3
-                imagen.setAttribute("y", "394");  // Bloque 3
+                imagen.setAttribute("x", "387");
+                imagen.setAttribute("y", "394");
             } else if (posicion[i] == 4) {
-                imagen.setAttribute("x", "405");  // Bloque 4
-                imagen.setAttribute("y", "405");  // Bloque 4
+                imagen.setAttribute("x", "405");
+                imagen.setAttribute("y", "405");
             } else if (posicion[i] == 5) {
-                imagen.setAttribute("x", "387");  // Aulas Técnicas
-                imagen.setAttribute("y", "357");  // Aulas Técnicas
+                imagen.setAttribute("x", "387");
+                imagen.setAttribute("y", "357");
             } else if (posicion[i] == 6) {
-                imagen.setAttribute("x", "405");  // Comedor y Aulas Técnicas
-                imagen.setAttribute("y", "335");  // Comedor y Aulas Técnicas
+                imagen.setAttribute("x", "405");
+                imagen.setAttribute("y", "335");
             } else if (posicion[i] == 7) {
-                imagen.setAttribute("x", "365");  // Lab
-                imagen.setAttribute("y", "355");  // Lab
+                imagen.setAttribute("x", "365");
+                imagen.setAttribute("y", "355");
             } else if (posicion[i] == 8) {
-                imagen.setAttribute("x", "357");  // Torre Steam
-                imagen.setAttribute("y", "290");  // Torre Steam
+                imagen.setAttribute("x", "357");
+                imagen.setAttribute("y", "290");
             } else if (posicion[i] == 9) {
-                imagen.setAttribute("x", "324");  // Recepción
-                imagen.setAttribute("y", "355");  // Recepción
+                imagen.setAttribute("x", "324");
+                imagen.setAttribute("y", "355");
             } else if (posicion[i] == 10) {
-                imagen.setAttribute("x", "337");  // TI
-                imagen.setAttribute("y", "435");  // TI
+                imagen.setAttribute("x", "337");
+                imagen.setAttribute("y", "435");
             } else if (posicion[i] == 11) {
-                imagen.setAttribute("x", "347");  // Comedor Externo
-                imagen.setAttribute("y", "470");  // Comedor Externo
+                imagen.setAttribute("x", "347");
+                imagen.setAttribute("y", "470");
             } else if (posicion[i] == 12) {
-                imagen.setAttribute("x", "315");  // DAI
-                imagen.setAttribute("y", "420");  // DAI
+                imagen.setAttribute("x", "315");
+                imagen.setAttribute("y", "420");
             } else if (posicion[i] == 13) {
-                imagen.setAttribute("x", "315");  // SODA
-                imagen.setAttribute("y", "247");  // SODA
+                imagen.setAttribute("x", "315");
+                imagen.setAttribute("y", "247");
             } else if (posicion[i] == 14) {
-                imagen.setAttribute("x", "159");  // Guarda
-                imagen.setAttribute("y", "280");  // Guarda
+                imagen.setAttribute("x", "159");
+                imagen.setAttribute("y", "280");
             } else if (posicion[i] == 15) {
-                imagen.setAttribute("x", "440");  // Piscina
-                imagen.setAttribute("y", "436");  // Piscina
+                imagen.setAttribute("x", "440");
+                imagen.setAttribute("y", "436");
             } else if (posicion[i] == 16) {
-                imagen.setAttribute("x", "480");  // Cancha Interna
-                imagen.setAttribute("y", "460");  // Cancha Interna
+                imagen.setAttribute("x", "480");
+                imagen.setAttribute("y", "460");
             }
-            if(posicion[i]!= 100){
+
+            if (posicion[i] != 100) {
                 svg.appendChild(imagen);
             }
         }
-            if (vigencia2[i] != 0){
+    }
+
+    // ===== SEGUNDO MAPA (GRISES) =====
+    for (let i = 0; i < posicion2.length; i++) {
+        if (vigencia2[i] != false) {
+
             let imagen = document.createElementNS("http://www.w3.org/2000/svg", "image");
             imagen.setAttribute("href", "../imagenes/icon.svg");
-            imagen.setAttribute("width", "20"); // ancho
-            imagen.setAttribute("height", "20"); // alto
-            imagen.style.filter = 'grayscale(200)'
+            imagen.setAttribute("width", "20");
+            imagen.setAttribute("height", "20");
+            imagen.style.filter = "grayscale(200)";
             imagen.style.boxShadow = "0 0 20px 5px rgba(255, 255, 0, 0.7)";
+
             if (posicion2[i] == 1) {
-                imagen.setAttribute("x", "340");  // Bloque 1
-                imagen.setAttribute("y", "375");  // Bloque 1
+                imagen.setAttribute("x", "340");
+                imagen.setAttribute("y", "375");
             } else if (posicion2[i] == 2) {
-                imagen.setAttribute("x", "358");  // Bloque 2
-                imagen.setAttribute("y", "385");  // Bloque 2
+                imagen.setAttribute("x", "358");
+                imagen.setAttribute("y", "385");
             } else if (posicion2[i] == 3) {
-                imagen.setAttribute("x", "377");  // Bloque 3
-                imagen.setAttribute("y", "394");  // Bloque 3
+                imagen.setAttribute("x", "377");
+                imagen.setAttribute("y", "394");
             } else if (posicion2[i] == 4) {
-                imagen.setAttribute("x", "395");  // Bloque 4
-                imagen.setAttribute("y", "405");  // Bloque 4
+                imagen.setAttribute("x", "395");
+                imagen.setAttribute("y", "405");
             } else if (posicion2[i] == 5) {
-                imagen.setAttribute("x", "377");  // Aulas Técnicas
-                imagen.setAttribute("y", "357");  // Aulas Técnicas
+                imagen.setAttribute("x", "377");
+                imagen.setAttribute("y", "357");
             } else if (posicion2[i] == 6) {
-                imagen.setAttribute("x", "395");  // Comedor y Aulas Técnicas
-                imagen.setAttribute("y", "335");  // Comedor y Aulas Técnicas
+                imagen.setAttribute("x", "395");
+                imagen.setAttribute("y", "335");
             } else if (posicion2[i] == 7) {
-                imagen.setAttribute("x", "355");  // Lab
-                imagen.setAttribute("y", "355");  // Lab
+                imagen.setAttribute("x", "355");
+                imagen.setAttribute("y", "355");
             } else if (posicion2[i] == 8) {
-                imagen.setAttribute("x", "347");  // Torre Steam
-                imagen.setAttribute("y", "290");  // Torre Steam
+                imagen.setAttribute("x", "347");
+                imagen.setAttribute("y", "290");
             } else if (posicion2[i] == 9) {
-                imagen.setAttribute("x", "314");  // Recepción
-                imagen.setAttribute("y", "355");  // Recepción
+                imagen.setAttribute("x", "314");
+                imagen.setAttribute("y", "355");
             } else if (posicion2[i] == 10) {
-                imagen.setAttribute("x", "327");  // TI
-                imagen.setAttribute("y", "435");  // TI
+                imagen.setAttribute("x", "327");
+                imagen.setAttribute("y", "435");
             } else if (posicion2[i] == 11) {
-                imagen.setAttribute("x", "337");  // Comedor Externo
-                imagen.setAttribute("y", "470");  // Comedor Externo
+                imagen.setAttribute("x", "337");
+                imagen.setAttribute("y", "470");
             } else if (posicion2[i] == 12) {
-                imagen.setAttribute("x", "305");  // DAI
-                imagen.setAttribute("y", "420");  // DAI
+                imagen.setAttribute("x", "305");
+                imagen.setAttribute("y", "420");
             } else if (posicion2[i] == 13) {
-                imagen.setAttribute("x", "305");  // SODA
-                imagen.setAttribute("y", "247");  // SODA
+                imagen.setAttribute("x", "305");
+                imagen.setAttribute("y", "247");
             } else if (posicion2[i] == 14) {
-                imagen.setAttribute("x", "149");  // Guarda
-                imagen.setAttribute("y", "280");  // Guarda
+                imagen.setAttribute("x", "149");
+                imagen.setAttribute("y", "280");
             } else if (posicion2[i] == 15) {
-                imagen.setAttribute("x", "430");  // Piscina
-                imagen.setAttribute("y", "436");  // Piscina
+                imagen.setAttribute("x", "430");
+                imagen.setAttribute("y", "436");
             } else if (posicion2[i] == 16) {
-                imagen.setAttribute("x", "470");  // Cancha Interna
-                imagen.setAttribute("y", "460");  // Cancha Interna
+                imagen.setAttribute("x", "470");
+                imagen.setAttribute("y", "460");
             }
-            if(posicion2[i]!= 100){
+
+            if (posicion2[i] != 100) {
                 svg.appendChild(imagen);
             }
         }
-        }
-            
-        }
-    
+    }
+}
     
         
     

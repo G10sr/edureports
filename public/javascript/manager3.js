@@ -37,7 +37,7 @@ async function mostrarUsuarios() {
         
         let nombre = document.createTextNode(nombresUsuarios[i]);
         let correo = document.createTextNode(correosUsuarios[i]);
-        let permisoTexto = permisosUsuarios[i] === 1 ? "✔️" : "❌"; 
+        let permisoTexto = permisosUsuarios[i] === true ? "✔️" : "❌"; 
         let permiso = document.createTextNode("Permiso: " + permisoTexto);
         let rol = document.createTextNode("Rol: " + rolesUsuarios[i]);
 
@@ -104,7 +104,7 @@ async function mostrarUsuarios() {
             label.className = 'labelsmanager';
             label.textContent = labelrol;
 
-            checkbox.checked = (rolIds[i] === 0 && l === 0) ||
+            checkbox.checked = (rolIds[i] === 7 && l === 7) ||
             (rolIds[i] === 1 && l === 1) ||
             (rolIds[i] === 2 && l === 2) ||
             (rolIds[i] === 3 && l === 3) ||
